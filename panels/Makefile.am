@@ -12,8 +12,7 @@ SUBDIRS= \
 	keyboard \
 	universal-access \
 	user-accounts \
-	datetime \
-	wacom
+	datetime
 
 if BUILD_COLOR
 SUBDIRS += color
