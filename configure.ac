@@ -109,7 +109,14 @@ PKG_CHECK_MODULES(NETWORK_PANEL, $COMMON_MODULES)
 PKG_CHECK_MODULES(ONLINE_ACCOUNTS_PANEL, $COMMON_MODULES goa-1.0 goa-backend-1.0)
 PKG_CHECK_MODULES(POWER_PANEL, $COMMON_MODULES upower-glib >= 0.9.1
                   gnome-settings-daemon >= $GSD_REQUIRED_VERSION)
-PKG_CHECK_MODULES(COLOR_PANEL, $COMMON_MODULES colord >= 0.1.8)
+PKG_CHECK_MODULES(COLOR_PANEL,
+                 [$COMMON_MODULES colord >= 0.1.8],
+                 [have_colord=yes],
+                 [have_colord=no])
+if test "x$have_colord" = xno ; then
+  AC_MSG_WARN(*** Color panel will not be built (colord not found) ***)
+fi
+AM_CONDITIONAL(BUILD_COLOR, [test "x$have_colord" = "xyes"])
 PKG_CHECK_MODULES(PRINTERS_PANEL, $COMMON_MODULES
                   polkit-gobject-1 >= $POLKIT_REQUIRED_VERSION)
 PKG_CHECK_MODULES(REGION_PANEL, $COMMON_MODULES libgnomekbd >= 2.91.91

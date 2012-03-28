@@ -3,7 +3,6 @@ SUBDIRS= \
 	background \
 	screen \
 	power \
-	color \
 	display \
 	mouse \
 	online-accounts \
@@ -15,6 +14,10 @@ SUBDIRS= \
 	user-accounts \
 	datetime \
 	wacom
+
+if BUILD_COLOR
+SUBDIRS += color
+endif
 
 if BUILD_PRINTERS
 SUBDIRS += printers
