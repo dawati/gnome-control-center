@@ -19,6 +19,14 @@ AC_HEADER_STDC
 LT_PREREQ([2.2])
 LT_INIT
 
+# .so version for libgnome-control-center
+LIBGNOMECONTROLCENTER_CURRENT=1
+LIBGNOMECONTROLCENTER_REVISION=0
+LIBGNOMECONTROLCENTER_AGE=0
+AC_SUBST(LIBGNOMECONTROLCENTER_CURRENT)
+AC_SUBST(LIBGNOMECONTROLCENTER_REVISION)
+AC_SUBST(LIBGNOMECONTROLCENTER_AGE)
+
 # Internationalization support
 
 IT_PROG_INTLTOOL([0.40.1])
@@ -231,7 +239,7 @@ AC_SUBST(PANELS_DIR)
 PANEL_CFLAGS="-I\$(top_srcdir)/ -DG_LOG_DOMAIN=\"\\\"\$(cappletname)-cc-panel\\\"\""
 AC_SUBST(PANEL_CFLAGS)
 
-PANEL_LIBS=""
+PANEL_LIBS="\$(top_builddir)/shell/libgnome-control-center.la"
 AC_SUBST(PANEL_LIBS)
 
 PANEL_LDFLAGS="-export_dynamic -avoid-version -module -no-undefined -export-symbols-regex '^g_io_module_(load|unload)'"
@@ -321,6 +329,7 @@ fi
 
 AC_OUTPUT([
 Makefile
+shell/libgnome-control-center.pc
 panels/Makefile
 panels/common/Makefile
 panels/background/Makefile

@@ -197,7 +197,23 @@ activate_panel (GnomeControlCenter *shell,
         }
       else
         {
-          g_warning ("Could not find the loadable module for panel '%s'", id);
+	  GKeyFile *key_file;
+
+	  /* It might be an external panel */
+	  key_file = g_key_file_new ();
+	  if (g_key_file_load_from_file (key_file, desktop_file, G_KEY_FILE_NONE, NULL))
+	    {
+	      gchar *command;
+
+	      command = g_key_file_get_string (key_file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_EXEC, NULL);
+	      if (command && command[0])
+	        {
+		  g_spawn_command_line_async (command, NULL);
+		  g_free (command);
+		}
+	    }
+
+	  g_key_file_free (key_file);
         }
     }
 }

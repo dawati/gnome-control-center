@@ -23,9 +23,10 @@ liblanguage_la_SOURCES =		\
 	cc-language-chooser.h
 
 liblanguage_la_LIBADD = 		\
+	$(PANEL_LIBS)			    \
 	$(LIBLANGUAGE_LIBS)
 
-liblanguage_la_LDFLAGS = -export_dynamic -avoid-version -module -no-undefined
+liblanguage_la_LDFLAGS = $(PANEL_LDFLAGS)
 
 list_languages_SOURCES = list-languages.c
 list_languages_LDADD = liblanguage.la
