@@ -114,6 +114,7 @@ PKG_CHECK_MODULES(MEDIA_PANEL, $COMMON_MODULES)
 PKG_CHECK_MODULES(MOUSE_PANEL, $COMMON_MODULES xi >= 1.2
                   gnome-settings-daemon >= $GSD_REQUIRED_VERSION x11)
 PKG_CHECK_MODULES(NETWORK_PANEL, $COMMON_MODULES)
+PKG_CHECK_MODULES(CONNMAN_PANEL, $COMMON_MODULES)
 PKG_CHECK_MODULES(ONLINE_ACCOUNTS_PANEL, $COMMON_MODULES goa-1.0 goa-backend-1.0)
 PKG_CHECK_MODULES(POWER_PANEL, $COMMON_MODULES upower-glib >= 0.9.1
                   gnome-settings-daemon >= $GSD_REQUIRED_VERSION)
@@ -151,11 +152,26 @@ PKG_CHECK_MODULES(NETWORK_MANAGER, NetworkManager >= $NETWORK_MANAGER_REQUIRED_V
                   libnm-glib >= $NETWORK_MANAGER_REQUIRED_VERSION
                   libnm-util >= $NETWORK_MANAGER_REQUIRED_VERSION
 		  libnm-gtk >= $NETWORK_MANAGER_REQUIRED_VERSION,
-                  [have_networkmanager=yes], have_networkmanager=no)
-if test "x$have_networkmanager" = xno ; then
-        AC_MSG_WARN(*** Network panel will not be built (NetworkManager ~0.9 or newer not found) ***)
-fi
+                  [have_networkmanager=yes; network_backend=NetworkManager],
+		  have_networkmanager=no)
 AM_CONDITIONAL(BUILD_NETWORK, [test x$have_networkmanager = xyes])
+
+# --enable-connman-panel
+AC_ARG_ENABLE([connman],
+              AS_HELP_STRING([--enable-connman],
+			     [Enable the Connman version of the Network panel (default: disabled)]),
+	      [if test $enableval = yes; then network_backend=Connman; fi],
+              [enable_connman=no])
+AM_CONDITIONAL(BUILD_CONNMAN_PANEL, [test x$enable_connman = xyes])
+
+# The NetworkManager and Connman panel are mutually exclusive
+if test x$have_networkmanager = xyes && test x$enable_connman = xyes; then
+  AC_MSG_ERROR([Cannot build both the NetworkManager and Connman panels])
+fi
+
+if test -z $network_backend; then
+        AC_MSG_WARN(*** Network panel will not be built (NetworkManager ~0.9 or newer not found, Connman panel not enabled) ***)
+fi
 
 # Check for gnome-bluetooth
 PKG_CHECK_MODULES(BLUETOOTH, $COMMON_MODULES gnome-bluetooth-1.0 >= 3.3.4,
@@ -336,6 +352,8 @@ panels/background/Makefile
 panels/background/gnome-background-panel.desktop.in
 panels/bluetooth/Makefile
 panels/bluetooth/bluetooth-properties.desktop.in
+panels/connman/Makefile
+panels/connman/gnome-connman-panel.desktop.in
 panels/datetime/Makefile
 panels/datetime/gnome-datetime-panel.desktop.in
 panels/datetime/po-timezones/Makefile
@@ -430,8 +448,8 @@ shell/gnome-control-center.desktop.in
 ])
 
 AC_MSG_NOTICE([gnome-control-center was configured with the following options:])
-if test "x$have_networkmanager" = "xyes"; then
-	AC_MSG_NOTICE([** NetworkManager (Network panel)])
+if test -n "$network_backend"; then
+	AC_MSG_NOTICE([** Network panel ($network_backend)])
 else
 	AC_MSG_NOTICE([   Network panel disabled])
 fi

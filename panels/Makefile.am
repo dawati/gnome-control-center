@@ -26,6 +26,10 @@ if BUILD_NETWORK
 SUBDIRS += network
 endif
 
+if BUILD_CONNMAN_PANEL
+SUBDIRS += connman
+endif
+
 if BUILD_BLUETOOTH
 SUBDIRS += bluetooth
 endif

@@ -1,0 +1,73 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+	<interface name="net.connman.Manager">
+		<method name="GetProperties">
+			<arg type="a{sv}" direction="out"/>
+		</method>
+		<method name="SetProperty">
+			<arg type="s" direction="in"/>
+			<arg type="v" direction="in"/>
+		</method>
+		<method name="GetTechnologies">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<method name="RemoveProvider">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="GetServices">
+			<arg type="a(oa{sv})" direction="out"/>
+		</method>
+		<method name="ConnectProvider">
+			<arg type="a{sv}" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="RegisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="UnregisterAgent">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="RegisterCounter">
+			<arg type="o" direction="in"/>
+			<arg type="u" direction="in"/>
+			<arg type="u" direction="in"/>
+		</method>
+		<method name="UnregisterCounter">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="CreateSession">
+			<arg type="a{sv}" direction="in"/>
+			<arg type="o" direction="in"/>
+			<arg type="o" direction="out"/>
+		</method>
+		<method name="DestroySession">
+			<arg type="o" direction="in"/>
+		</method>
+		<method name="RequestPrivateNetwork">
+			<arg type="o" direction="out"/>
+			<arg type="a{sv}" direction="out"/>
+			<arg type="h" direction="out"/>
+		</method>
+		<method name="ReleasePrivateNetwork">
+			<arg type="o" direction="in"/>
+		</method>
+		<signal name="PropertyChanged">
+			<arg type="s"/>
+			<arg type="v"/>
+		</signal>
+		<signal name="TechnologyAdded">
+			<arg type="o"/>
+			<arg type="a{sv}"/>
+		</signal>
+		<signal name="TechnologyRemoved">
+			<arg type="o"/>
+		</signal>
+		<signal name="ServicesAdded">
+			<arg type="a(oa{sv})"/>
+		</signal>
+		<signal name="ServicesRemoved">
+			<arg type="ao"/>
+		</signal>
+	</interface>
+</node>
